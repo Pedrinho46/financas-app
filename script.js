@@ -9,13 +9,13 @@ const categorySelect = document.getElementById('category');
 const expenseList = document.getElementById('expense-list');
 const totalAmount = document.getElementById('total-amount');
 
-function addExpense(description, amount, category) {
-    //Nesse campo, adiciono as opções de despesas
+function addExpense(descricao, valor, categoria) {
+    // Nesse campo, adiciono as opções de despesas
     const expense = {
         id: Date.now(),
-        description,
-        amount: parseFloat(amount),
-        category
+        descricao,
+        valor: parseFloat(valor),
+        categoria
     };
     expenses.push(expense);
 }
@@ -27,26 +27,26 @@ function removeExpense(id) {
 function editExpense(id) {
     const expense = expenses.find(exp => exp.id === id);
     if (expense) {
-        descriptionInput.value = expense.description;
-        amountInput.value = expense.amount;
-        categorySelect.value = expense.category;
+        descriptionInput.value = expense.descricao;
+        amountInput.value = expense.valor;
+        categorySelect.value = expense.categoria;
         editingId = id;
     }
 }
 
 
 function calculateTotal() {
-    return expenses.reduce((total, expense) => total + expense.amount, 0);
+    return expenses.reduce((total, expense) => total + expense.valor, 0);
 }
 function updateUI() {
     expenseList.innerHTML = '';
 
     expenses.forEach(expense => {
         const li = document.createElement('li');
-        const isHighExpense = expense.amount > 100;
+        const isHighExpense = expense.valor > 100;
         li.className = isHighExpense ? 'high-expense' : '';
         li.innerHTML = `
-            <span>${expense.description} - R$ ${expense.amount.toFixed(2)} - ${expense.category}${isHighExpense ? ' ⚠️' : ''}</span>
+            <span>${expense.descricao} - R$ ${expense.valor.toFixed(2)} - ${expense.categoria}${isHighExpense ? ' ⚠️' : ''}</span>
             <button class="delete-btn" onclick="removeExpense(${expense.id})">Remover</button>
             <button class="edit-btn" onclick="editExpense(${expense.id})">Editar</button>
         `;
@@ -58,22 +58,22 @@ function updateUI() {
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const description = descriptionInput.value.trim();
-    const amount = amountInput.value;
-    const category = categorySelect.value;
+    const descricao = descriptionInput.value.trim();
+    const valor = amountInput.value;
+    const categoria = categorySelect.value;
 
-    if (description && amount && category) {
+    if (descricao && valor && categoria) {
         if (editingId) {
             // Editar existente
             const expense = expenses.find(exp => exp.id === editingId);
             if (expense) {
-                expense.description = description;
-                expense.amount = parseFloat(amount);
-                expense.category = category;
+                expense.descricao = descricao;
+                expense.valor = parseFloat(valor);
+                expense.categoria = categoria;
             }
             editingId = null;
         } else {
-            addExpense(description, amount, category);
+            addExpense(descricao, valor, categoria);
         }
         form.reset();
         updateUI();
